@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+		
+	  <title>Doktrina Study Guide</title>
+	  
+		<style>
+      		* {
+      			/* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    				-webkit-tap-highlight-color: rgba(0,0,0,0);
+    				box-sizing: border-box;
+			}
+
+			html, body {
+    				-webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    				-webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+ 		-webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    				background-color: #FFFFFF;
+    				background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    				font-family: system-ui, -apple-system, -apple-system-font, 'Segoe UI', 'Roboto', sans-serif;
+    				font-size:12px;
+    				height:100vh;
+    				margin:0px;
+    				padding:0px;
+    				/* Padding to avoid the "unsafe" areas behind notches in the screen */
+    				padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
+    				width:100%;
+    				overflow: hidden;
+			}
+			#body.active {
+				background: #333 !important;
+				color: #fff !important;
+			}
+		      a:link {
+    				-webkit-tap-highlight-color: transparent;
+    			}
+    			a {
+		      	text-decoration: none;
+		      	outline: none;
+		      	color: #333;
+		      	display: block
+		      }
+    			::-webkit-scrollbar {
+    				display: none;
+    			}
+    			.header {
+    				width: 100%;
+    				padding: 2em;
+    				text-align: center;
+    				position: relative;
+    			}
+    			.header>img {
+    				position: absolute;
+    				left: 1.5em;
+    				top: 1.5em;
+    				width: 2rem;;
+  				height: 2rem;
+  				transition: .1s ease;
+  				filter: invert(12%) sepia(7%) saturate(0%) hue-rotate(154deg) brightness(101%) contrast(81%);
+  			}
+  			.header>img:active {
+  				filter: invert(47%) sepia(40%) saturate(3%) hue-rotate(65deg) brightness(99%) contrast(93%);
+  				transform: scale(1.1);
+  			}
+    			.spacer {
+    				width: 100%;
+    				height: 5vh;
+    				background: #eee;
+    				box-shadow:  0 0 0 2px lightgrey inset;
+    			}
+    			ul {
+    				list-style-type: none;
+    				padding: 0;
+    				margin: 0;
+    			}
+    			li {
+    				padding: 1em;
+    				font-size: 1.5em;
+    			}
+    			li:active {
+    				background: #eee;
+    			}
+    			#list.active>li:active {
+    				background: #2f4f4f;
+    			}
+    			button {
+    				float: right;
+    			}
+    			#themeR {
+    				display: none;
+    			}
+    			#m {
+  	position: absolute;
+  	width: 100vw;
+  	height: 100vh;
+  	top: 0;
+  	left: 0;
+  	background: rgba(0,0,0,0.3);
+  	display: none;
+  	justify-content: center;
+  	align-items: center;
+  	z-index: 5;
+  }
+  #m.active {
+  	display: flex;
+  }
+  .delModal {
+  	padding: 2rem;
+  	background: #fff;
+  	border-radius: .2em;
+  	font-size: 1.5em;
+  	width: 70vw;
+  	display: flex;
+  	justify-content: center;
+  	flex-direction: column;
+	animation: bounce .2s ease-in-out forwards;
+  }
+  @keyframes bounce {
+  	0% {
+  		transform: scale(.9);
+  		opacity: 0;
+  	}
+  	20% {
+  		transform: scale(1);
+  		opacity: 2;
+  	}
+  	50% {
+  		transform: scale(1.1);
+  		opacity: 5;
+  	}
+  	100% {
+  		transform: scale(1);
+  		opacity: 1;
+  	}
+  }
+  .delModal>div {
+  	display: flex;
+  	justify-content: center;
+  	margin-bottom: 1em;
+  }
+  .delModal>div:nth-child(3) {
+  	margin: 0;
+  }
+  .delModal>div>button {
+  	padding: 1em;
+  	border: 0;
+  	outline: none;
+  	border-radius: .5em;
+  	background: transparent;
+  }
+  .delModal>div>button#delBtn {
+  	background: red;
+  	color: #fff;
+  }
+  #svg>img {
+  	width: 5rem;
+  	height: 5rem;
+  }
+    		</style>
+   </head>
+   <body id="body">
+		<div class="header">
+			<img src="svg/left-chevron.svg" id="back">
+			Settings
+		</div>
+		<div class="spacer"></div>
+		<div class="main">
+			<ul id="list">
+				<li>Themes
+					<button id="theme">Night Mode</button>
+					<button id="themeR">Day Mode</button>
+				</li>
+				<li id="clear">Clear Storage</li>
+			</ul>
+		</div>
+		
+		<div id="m">
+			<div class="delModal">
+				<div id="svg">
+					<img src="svg/alert.svg">
+				</div>
+				<div>Delete All Data</div>
+				<div>
+					<button id="delBtn">Confirm</button>
+					<button id="cancel">Cancel</button>
+				<div>
+			</div>
+		</div>
+		
+		
+		<script src="cordova.js"></script>
+		<script>
+			var db = window.openDatabase("dsgdb", "1.0", "dsg database", 1000000);
+			
+			document.addEventListener("deviceready", () => {
+			
+			var modal = document.getElementById("m");
+			window.addEventListener("popstate", () => {
+				modal.classList.toggle("active");
+			});
+			
+			var back = document.getElementById("back");
+			back.onclick = () => window.history.back();
+			
+			var clear = document.getElementById("clear");
+			var cancel = document.getElementById("cancel");
+			var delBtn = document.getElementById("delBtn");
+			
+			clear.onclick = () => window.location = "#m";
+			cancel.onclick = () => window.history.back();
+			delBtn.onclick = () => {
+				db.transaction(function(tx) {
+					tx.executeSql("DROP TABLE IF EXISTS  study_guides", [], function(tx, result){
+						alert("study_guides Deleted!");
+					});
+				});
+				
+				db.transaction(function(transaction) {
+					transaction.executeSql("DROP TABLE IF EXISTS  category", [], function(tx, result){
+						alert("category Deleted!");
+					});
+				});
+				
+				// localStorage.clearStorage();
+				
+				window.history.back();
+			}
+			
+			var theme = document.getElementById("theme");
+			var themeR = document.getElementById("themeR");
+			var body = document.getElementById("body");
+			var list = document.getElementById("list")
+			
+			if (localStorage.getItem("theme") == "dark") {
+				body.classList.add("active");
+				list.classList.add("active");
+				theme.style.display = "none";
+				themeR.style.display = "block";
+			}
+			
+			theme.addEventListener("click", function () {
+				localStorage.setItem("theme", "dark");
+				theme.style.display = "none";
+				themeR.style.display = "block";
+				body.classList.toggle("active");
+				list.classList.toggle("active");
+			});
+			themeR.addEventListener("click", function () {
+				localStorage.setItem("theme", "light");
+				themeR.style.display = "none";
+				theme.style.display = "block";
+				body.classList.toggle("active");
+				list.classList.toggle("active");
+			});
+			
+			});
+		</script>
+		
+   </body>
+</html>

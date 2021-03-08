@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="format-detection" content="telephone=no" />
+
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover" />
+		
+		<link rel="stylesheet" href="css/icons.css">
+
+		<style>
+        * {
+         /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        box-sizing: border-box;
+   }
+
+   html, body {
+        -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+        -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+        background-color: #FFFFFF;
+        background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+        font-family: system-ui, -apple-system, -apple-system-font, 'Segoe UI', 'Roboto', sans-serif;
+        font-size:12px;
+        height:100vh;
+        margin:0px;
+        padding:0px;
+        /* Padding to avoid the "unsafe" areas behind notches in the screen */
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
+        width:100%;
+   }
+   #body.active {
+   	background: #333;
+   }
+        a:link {
+        -webkit-tap-highlight-color: transparent;
+       }
+       a {
+         text-decoration: none;
+         outline: none;
+         color: #333;
+        }
+       ::-webkit-scrollbar {
+        display: none;
+       }
+     
+       .footer {
+       	position: fixed;
+       	bottom: 0;
+       	width: 100%;
+       	display: flex;
+       	justify-content: center;
+       }
+       .select-container {
+       	background: dodgerblue;
+       	font-size: 1.3em;
+       	color: #fff;
+       	border-radius: .7em .7em 0 0;
+       	position: relative;
+       }
+       select {
+        background: transparent;
+        border: 0;
+        border-radius: .7em 0 0 0;
+        outline: none;
+        padding: .8em .5em;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+        color: #fff;
+        transition: .1s ease;
+       }
+       select:active {
+       	background: royalblue;
+       }
+       #add-category {
+       	outline: none;
+       	padding: 0 1em;
+		border-left: 1px solid royalblue;
+		color: #fff;
+       }
+       #header {
+       	background: #fff;
+       	position: absolute;
+       	top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        z-index: 10;
+       }
+       #header>div {
+       	display: flex;
+       	padding: .5em;
+       	margin-right: 1em;
+       }
+       #header>div>img {
+       	margin: 1em;
+       }
+       #header>div>button {
+		font-size: 1.5em;
+       	background: transparent;
+       	border: 0;
+       	outline: none;
+       }
+       #header>div>button:active {
+       	background: #eee;
+       }
+       #header.active {
+       	background: #333;
+       }
+       #header.active>div>img {
+       	filter: invert(97%) sepia(60%) saturate(1%) hue-rotate(288deg) brightness(107%) contrast(100%);
+       }
+      #header.active>div>button {
+      	color: #fff;
+      }
+       section {
+       	height: 100vh;
+       	width: 100%;
+       	overflow-y: scroll;
+       	padding-top: 7rem;
+       	padding-bottom: 3rem;
+       }
+       textarea {
+        width: 100%;
+        background: #fff;
+        padding: .5em 1.5em;
+        padding-bottom: 0;
+        margin: 0;
+        font-size: 1.3em;
+        overflow: hidden;
+        border: 0;
+        outline: none;
+        resize: none;
+       }
+       textarea#qDiv {
+        border-bottom: 1px dashed gainsboro;
+        font-weight: bold;
+       }
+       textarea#aDiv {
+        min-height: 15rem;
+       }
+       #qDiv.active,
+       #aDiv.active {
+       	background: #333;
+       	color: #fff;
+       }
+       @media only screen and (max-height: 400px) {
+       	.select-container {
+       		bottom: -4em;
+       	}
+       }
+    	  img {
+  	width: 2rem;
+  	height: 2rem;
+  	transition: .1s ease;
+  	filter: invert(12%) sepia(7%) saturate(0%) hue-rotate(154deg) brightness(101%) contrast(81%);
+  }
+  img:active {
+  	filter: invert(47%) sepia(40%) saturate(3%) hue-rotate(65deg) brightness(99%) contrast(93%);
+  	transform: scale(1.1);
+  }
+  #edit {
+  	display: none;
+  }
+  
+    #m {
+  	position: absolute;
+  	width: 100vw;
+  	height: 100vh;
+  	top: 0;
+  	left: 0;
+  	background: rgba(0,0,0,0.3);
+  	display: none;
+  	z-index: 11;
+  }
+  #m.active {
+  	display: block;
+  }
+  #m>div {
+  	width: 100vw;
+  	height: 50vh;
+  }
+  #opt-container {
+  	background: #fff;
+  	padding: 1em;
+  	overflow-y: scroll;
+  	position: relative;
+  	animation: slide-up .2s ease-in-out forwards;
+  }
+  @keyframes slide-up {
+  	from {
+  		bottom: -50vh;
+  	}
+  	to {
+  		bottom: 0;
+  	}
+  } 
+  #opt-container>div {
+  	display: flex;
+  	justify-content: space-between;
+  	border-bottom: 1px solid #eee;
+  }
+  #opt-container>div:active {
+  	background: #eee;
+  }
+  #opt-container>div>div {
+  	padding: 1em;
+  	font-size: 1.1em;
+  }
+  
+   #addModal {
+  	position: absolute;
+  	width: 100vw;
+  	height: 100vh;
+  	top: 0;
+  	left: 0;
+  	background: rgba(0,0,0,0.3);
+  	display: none;
+  	justify-content: center;
+  	align-items: center;
+  	z-index: 11;
+  }
+  #addModal.active {
+  	display: flex;
+  }
+  .mainModal {
+  	padding: 2rem;
+  	background: #fff;
+  	border-radius: .2em;
+  	font-size: 1.5em;
+  	width: 70vw;
+  	display: flex;
+  	justify-content: center;
+  	flex-direction: column;
+	animation: bounce .2s ease-in-out forwards;
+  }
+  @keyframes bounce {
+  	0% {
+  		transform: scale(.9);
+  		opacity: 0;
+  	}
+  	20% {
+  		transform: scale(1);
+  		opacity: 2;
+  	}
+  	50% {
+  		transform: scale(1.1);
+  		opacity: 5;
+  	}
+  	100% {
+  		transform: scale(1);
+  		opacity: 1;
+  	}
+  }
+  .mainModal>input[type=text] {
+  	padding: 1em;
+  	font-size: 1em;
+  	width: 100%;
+  	outline: none;
+  	border: 1px solid;
+  	border-radius: 3px;
+  	margin-bottom: 2.5rem;
+  }
+  #saveName {
+  	background: royalblue;
+  	color: #fff;
+  }
+  .mainModal>div {
+  	display: flex;
+  	justify-content: space-around;
+  	margin-top: 1em;
+  }
+  .mainModal>div>button {
+  	padding: 1em;
+  	width: 40%;
+  	border: 0;
+  	outline: none;
+  	background: #fff;
+  	border-radius: .3em;
+  }
+		</style>
+	</head>
+	<body id="body">
+		<div id="header">
+			<div>
+			<img src="svg/left-chevron.svg" id="back">
+			</div>
+			<div>
+				<button id="save">Save</button>
+				<button id="edit">Edit</button>
+				<button id="reset">New</button>
+			</div>
+		</div>
+		
+		<section class="txtarea">
+		<textarea id="qDiv" onkeyup="adjust(this)" placeholder="Question"></textarea>
+		<textarea id="aDiv" onkeyup="adjust(this)" placeholder="Answer"></textarea>
+		</section>
+		
+		<div class="footer">
+		<div class="select-container">
+			<select id="category">
+				<option value="0" selected hidden>Select Category</option>
+			</select>
+			<span id="add-category">
+				&plus;
+			</span>
+		
+		</div>
+		</div>
+		
+		<div id="m">
+			<div id="spacer"></div>
+			<div id="opt-container"></div>
+		</div>
+		
+		<div id="addModal">
+			<div class="mainModal">
+				<input type="text" placeholder="Add Category" id="newCategory" autofocus>
+				<div>
+					<button id="saveName">Save</button>
+					<button onclick="back()">Cancel</button>
+				</div>
+			</div>
+		</div>
+		
+		<script src="cordova.js"></script>
+		<script src="js/create.js"></script>
+		
+		<script type="text/javascript" src="nicEdit/nicEdit.js"></script>
+		<script>
+		window.addEventListener("popstate", function () {
+document.getElementById("m").classList.remove("active");
+document.getElementById("addModal").classList.remove("active");
+		});
+		document.getElementById("spacer").addEventListener("click", function () {
+			window.history.back();
+		});
+		
+		function selected(div, id) {
+			if (localStorage.getItem("selected") !== null) {	
+			var cat = localStorage.getItem("selected");
+document.getElementById(cat).lastChild.firstChild.classList.remove("gg-check");
+
+			localStorage.setItem("selected", id);
+document.getElementById(id).lastChild.firstChild.classList.add("gg-check");
+			} else {
+				localStorage.setItem("selected", id);
+				div.lastChild.firstChild.classList.add("gg-check");
+			}
+			
+			document.getElementById("category").value = id;
+			window.history.back();
+		}
+		
+		document.getElementById("add-category").addEventListener("click", function () {
+	window.location = "#addModal";
+	document.getElementById("newCategory").value = "";
+	addModal.classList.add("active");
+});
+
+document.getElementById("saveName").addEventListener("click", function () {
+	var name = document.getElementById("newCategory").value;
+	
+	if (name !== "") {
+	db.transaction(function (tx) {
+	tx.executeSql("INSERT INTO category (name) VALUES (?)",[name], function (t, res) {
+		tx.executeSql("SELECT * FROM category ORDER BY id DESC LIMIT 1", [], function(tx, result){
+			var id = result.rows.item(0).id;
+			var name = result.rows.item(0).name;
+			
+			var opt = document.createElement("option");
+			opt.innerText = name;
+			opt.setAttribute("value", id);
+			var cat = document.getElementById("category");
+			cat.appendChild(opt);
+			
+			var div = document.createElement("div");
+			div.innerHTML = "<div>" + name + "</div><div><i></i></div>";
+			div.setAttribute("onclick", `selected(this, ${id})`);
+			div.setAttribute("id", id);
+			document.getElementById("opt-container").appendChild(div);
+		
+		});
+		back();
+		});
+	});
+	} else {
+		alert("No Value");
+	}
+});
+
+		function back() {
+			window.history.back();
+		}
+		
+		function adjust(o) {
+			o.style.height = "1px";
+			o.style.height = (20+o.scrollHeight)+"px";
+			o.scrollIntoView(false);
+		}
+		</script>
+		
+	</body>
+</html>

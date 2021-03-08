@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="format-detection" content="telephone=no" />
+
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover" />
+
+		<title>Doktrina Study Guide</title>
+		<link rel="stylesheet" href="css/swiper.min.css" />
+		<link rel="stylesheet" href="css/icons.css" />
+
+		<style>
+        * {
+         /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        box-sizing: border-box;
+   }
+
+   html, body {
+        -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+        -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+        background-color: #FFFFFF;
+        background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+        font-family: system-ui, -apple-system, -apple-system-font, 'Segoe UI', 'Roboto', sans-serif;
+        font-size:12px;
+        height:100vh;
+        margin:0px;
+        padding:0px;
+        /* Padding to avoid the "unsafe" areas behind notches in the screen */
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
+        width:100%;
+        overflow: hidden;
+   }
+   #body.active {
+   	background: #333;
+   }
+        a:link {
+        -webkit-tap-highlight-color: transparent;
+       }
+       a {
+         text-decoration: none;
+         outline: none;
+         color: #333;
+        }
+       ::-webkit-scrollbar {
+        display: none;
+       }
+       #header {
+        width: 100%;
+        padding: 1.5em;
+        margin-bottom: 1.5em;
+       }
+       #header>span {
+        font-size: 2em;
+        padding: 1em .5em;
+        background: #333;
+        color: #fff;
+        position: relative;
+        border-left: 1px dotted #333;
+        border-right: 1px dotted #333;
+       }
+       #header>span:after {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 0;
+        border-left: 1.6em solid transparent;
+        border-right: 1.6em solid transparent;
+        border-bottom: .5em solid #fff;
+       }
+       #logo.active:after {
+       	border-bottom-color: #333;
+       }
+        #search-container {
+         margin-top: 7rem;
+         position: relative;
+         margin-bottom: 1em;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         transition: .2s ease-in-out;
+         border-width: 1px 0 1px 0;
+         border-color: gainsboro;
+         border-style: solid;
+        }
+        #search {
+         width: 70%;
+         padding: 1.2em;
+         font-size: 1.2em;
+         outline: none;
+         border: 0;
+        }
+        #search.active {
+        	background: #333;
+        	color: #fff;
+        }
+        #category-btn {
+         width: 15rem;
+         margin: auto;
+         margin-top: 5rem;
+         padding: 1em;
+         text-align: center;
+         background: red;
+         border-radius: 3em;
+        }
+        #category-btn>a {
+         color: #fff;
+         display: block;
+        }
+        #category-btn:active {
+         transform: scale(.9);
+        }
+        .swiper-container {
+         width: 100%;
+         height: 100%;
+        }
+        #res {
+         display: none;
+         width: 100%;
+         height: 75vh;
+    	    overflow-y: scroll;
+         list-style-type: none;
+         padding: 0;
+         margin: 0;
+        }
+        #res>li {
+         display: block;
+         width: 100%;
+         border-bottom: 1px solid lightgrey;
+         padding: .7em 2em;
+         transition: .2s ease;
+        }
+        #res>li:active {
+         background: #eee !important;
+        }
+        #res.active>li:active {
+         background: #2f4f4f !important
+        }
+        #res>li>div,
+        #res>li>span {
+         white-space: nowrap;
+         text-overflow: ellipsis;
+         color: rgba(0,0,0,0.7);
+         overflow: hidden;
+         width: 100%;
+         font-size: 1.2em;
+         display: inline-block;
+        }
+        #res.active>li>div,
+        #res.active>li>span {
+        	color: #fff;
+        }
+        #res>li>div {
+         font-weight: bold;
+        }
+   #add {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    background: green;
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.5em;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .1s ease-in-out;
+    z-index: 10;
+   }
+   #add:active {
+   	transform: scale(.9);
+   }
+   #add>a {
+   	color: #fff;
+   }
+  #m {
+  	position: absolute;
+  	width: 100vw;
+  	height: 100vh;
+  	top: 0;
+  	left: 0;
+  	background: rgba(0,0,0,0.3);
+  	display: none;
+  	justify-content: center;
+  	align-items: center;
+  	z-index: 5;
+  }
+  #m.active {
+  	display: flex;
+  }
+  .delModal {
+  	padding: 2rem;
+  	background: #fff;
+  	border-radius: .2em;
+  	font-size: 1.5em;
+  	width: 70vw;
+  	display: flex;
+  	justify-content: center;
+  	flex-direction: column;
+	animation: bounce .2s ease-in-out forwards;
+  }
+  @keyframes bounce {
+  	0% {
+  		transform: scale(.9);
+  		opacity: 0;
+  	}
+  	20% {
+  		transform: scale(1);
+  		opacity: 2;
+  	}
+  	50% {
+  		transform: scale(1.1);
+  		opacity: 5;
+  	}
+  	100% {
+  		transform: scale(1);
+  		opacity: 1;
+  	}
+  }
+  .delModal>div {
+  	display: flex;
+  	justify-content: center;
+  	margin-bottom: 1em;
+  }
+  .delModal>div:nth-child(3) {
+  	margin: 0;
+  }
+  .delModal>div>button {
+  	padding: 1em;
+  	border: 0;
+  	outline: none;
+  	border-radius: .5em;
+  	background: transparent;
+  }
+  .delModal>div>button#delBtn {
+  	background: red;
+  	color: #fff;
+  }
+  #svg>img {
+  	width: 5rem;
+  	height: 5rem;
+  }
+  #cog {
+  	width: 2rem;
+  	height: 2rem;
+  	float: right;
+  	transition: .1s ease;
+  	filter: invert(12%) sepia(7%) saturate(0%) hue-rotate(154deg) brightness(101%) contrast(81%);
+  }
+  #cog.active {
+  	filter: invert(97%) sepia(60%) saturate(1%) hue-rotate(288deg) brightness(107%) contrast(100%);
+  }
+  #cog:active {
+  	filter: invert(47%) sepia(40%) saturate(3%) hue-rotate(65deg) brightness(99%) contrast(93%);
+  	transform: scale(1.1);
+  }
+  
+		</style>
+	</head>
+	<body id="body">
+		
+		<div id="header">
+			<span id="logo">DSG</span>
+			<a href="settings.html">
+				<img src="svg/cog-solid.svg" id="cog">
+			</a>
+		</div>
+		
+		<div id="search-container">
+			<div class="search-icon">
+				<i id="gg-search"></i>
+			</div>
+			<input type="text" id="search" placeholder="Search ..." />
+		</div>
+		
+		
+		<div id="category-btn">
+			<a href="category.html">Categories</a>
+		</div>
+		
+			<div id="add">
+				<a href="create.html">&plus;</a>
+			</div>
+			
+			<ul id="res">
+			</ul>
+
+		
+		<div id="m">
+			<div class="delModal">
+				<div id="svg">
+					<img src="svg/alert.svg">
+				</div>
+				<div>Confirm Delete</div>
+				<div>
+					<button id="delBtn">Confirm</button>
+					<button id="cancelDel">Cancel</button>
+				<div>
+			</div>
+		</div>
+		
+		<script src="cordova.js"></script>
+		<script src="js/index.js"></script>
+		<script src="js/swiper.min.js"></script>
+		<script>
+
+    var swiper = new Swiper('.swiper-container', {
+      direction: 'vertical',
+      slidesPerView: 'auto',
+      freeMode: true,
+      scrollbar: {
+        el: '.swiper-scrollbar',
+      },
+      mousewheel: true,
+    });
+  
+		</script>
+	</body>
+</html>
